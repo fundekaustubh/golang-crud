@@ -31,7 +31,18 @@ func main() {
 			accounts = append(accounts, newAccount)
 			fmt.Fprintf(w, "Account created successfully!")
 		} else if r.Method == http.MethodGet {
-			fmt.Fprintf(w, "Accounts: %v", accounts)
+			accountID := r.FormValue("accountID")
+			if accountID == "" {
+				fmt.Fprintf(w, "Accounts: %v", accounts)
+			} else {
+				for _, account := range accounts {
+					if account.AccountID == accountID {
+						fmt.Fprintf(w, "Account: %v", account)
+						return
+					}
+				}
+				fmt.Fprintf(w, "Account not found!")
+			}
 		} else if r.Method == http.MethodDelete {
 			accountID := r.FormValue("accountID")
 			for i, account := range accounts {
